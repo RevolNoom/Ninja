@@ -3,10 +3,13 @@
 
 #include <Godot.hpp>
 #include <ResourceLoader.hpp>
+#include <CollisionObject2D.hpp>
 #include <Position2D.hpp>
 #include <Area2D.hpp>
 #include <PackedScene.hpp>
 #include <Node.hpp>
+#include "shuriken.h"
+#include "fighter.h"
 
 using namespace godot;
 
@@ -22,7 +25,7 @@ class Main: public Node
         ~Main();
         
         void Start_Game();
-        void _on_Fighter_Shuriken_Throw();
+        void _on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction);
 
     private:
         Ref<PackedScene> _Shuriken_Scene;

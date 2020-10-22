@@ -5,6 +5,12 @@
 
 void Fighter::_process(double delta)
 {
+    if (_Anim_Sprite == nullptr)
+    {
+        Godot::print_error("Hey, _Anim_Sprite is null", "_process",  "fighter.cpp", 53);
+        return;
+    }
+
     _Velocity.x = 0;
     if (KEYPRESS.is_key_pressed(_Key_Right))
         _Velocity.x += _Speed;
@@ -19,32 +25,35 @@ void Fighter::_process(double delta)
 
     if (_Current_Cooldown <= 0 && KEYPRESS.is_key_pressed(_Key_Throw))
     {
+        //_Anim_Sprite->set_animation();
+        _Anim_Sprite->play("throw_left");
+
         Vector2 Direction= Vector2(-1, 0);
         if (_Anim_Sprite->is_flipped_h())
             Direction.x = 1; 
             
         emit_signal("Shuriken_Throw", this, Direction);
+        _Current_Cooldown = _Shuriken_Cooldown;
     }  
 
     _Current_Cooldown -= delta;
     _Current_Cooldown = _Current_Cooldown < 0? 0 : _Current_Cooldown;
 
-    if (_Anim_Sprite == nullptr)
-    {
-        Godot::print_error("Hey, _Anim_Sprite is missing", "_process",  "fighter.cpp", 53);
-        return;
-    }
     
+    if (!_Anim_Sprite->is_playing())
+    {
+        //Godot::print("Idling");
+        _Anim_Sprite->set_animation("left");
+    }
     if (_Velocity.x != 0)
     {
-        _Anim_Sprite->set_animation("left");
         _Anim_Sprite->set_flip_h(_Velocity.x > 0);
         _Anim_Sprite->play();
     }
     else
     {
-        _Anim_Sprite->set_animation("default");
-        _Anim_Sprite->stop();
+        //_Anim_Sprite->set_animation("default");
+        //_Anim_Sprite->stop();
     }
 
     _Last_Position = get_global_position();
@@ -130,13 +139,19 @@ void Fighter::setup_race(double HpMultiplier,
     _Gravity = DEFAULT_GRAVITY;
     _Current_Cooldown = 0;
     _Current_Gravity = _Gravity;
+
+    
 }
 
 void Fighter::_on_Fighter_body_entered(godot::PhysicsBody2D *body)
 {
+    //Godot::print(String("Hey, a ") + body->___get_class_name() + String(" hit me! :("));
+    
     //One way collision on the upper side of the platform
     if (body->is_class("StaticBody2D"))
     {
+        //Godot::print(String("Luckily, it's only a StaticBody2D"));
+
         auto ColliShape = body->get_node<CollisionShape2D>("CollisionShape2D");
         auto rect = ColliShape->get_shape();
         Vector2 rectpos= cast_to<RectangleShape2D>(rect.ptr())->get_extents();
@@ -151,17 +166,36 @@ void Fighter::_on_Fighter_body_entered(godot::PhysicsBody2D *body)
             _Current_Gravity = 0;
         }
     }
-    else
+    
+    //Note to self:
+    // For precise type checking, use cast_to
+    //else if (body->is_class("Shuriken"))
+    
+    else if (cast_to<Shuriken>(body)!=nullptr)
     {
-        Godot::print("body is not Static2D");
+        //Godot::print("Finally a shuriken");
+
+        _Hit_Point -= (double) body->get("Damage");
+        if (_Hit_Point<=0)
+        {
+            set_deferred("disabled", true);
+            queue_free();
+        }
+        
+        body->set_deferred("disabled", true);
+        body->queue_free();
     }
+    else 
+           Godot::print("_on_Fighter_body_entered: Unknown body collided");
+
     
 }
 
 
 void Fighter::_on_Fighter_body_exited(godot::PhysicsBody2D *body)
 {
-     _Current_Gravity = _Gravity;
+    if (body->is_class("StaticBody2D"))
+        _Current_Gravity = _Gravity;
 }
 
 

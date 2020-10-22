@@ -48,16 +48,20 @@ class Fighter: public Area2D
                 void _on_Fighter_body_entered(godot::PhysicsBody2D *body);
                 void _on_Fighter_body_exited(godot::PhysicsBody2D *body);
 
-        private:
+
+        public:
                 godot::String _Race;
+
+                Vector2 _Character_Size,
+                        _Screen_Size;
+                        
+        private:
                 //Pointers to child nodes
                 AnimatedSprite *_Anim_Sprite;
 
                 Vector2 _Velocity,
-                        _Last_Position,
-                        _Character_Size,
-                        _Screen_Size;
-                
+                        _Last_Position;
+                 
                 int     _Key_Jump,
                         _Key_Left,
                         _Key_Right,
@@ -69,7 +73,7 @@ class Fighter: public Area2D
                         _Jump_Power,
                         _Hit_Point,
                         _Speed,
-                        _Gravity,  
+                        _Gravity, 
 
                         // Temporary gravity that's affecting the fighter
                         // Becomes zero when standing on platforms
