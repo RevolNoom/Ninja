@@ -47,11 +47,12 @@ void Main::_on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction)
 
     add_child(s);
 
+
     s->show();
     
     auto Is_Facing_Right = Thrower->get_node<AnimatedSprite>("AnimatedSprite")->is_flipped_h();
 
-    Godot::print("Character size: " + Thrower->_Character_Size);
+    //Godot::print("Character size: " + Thrower->_Character_Size);
     s->set_global_position(
             Vector2(
                     Thrower->get_global_position().x + 
@@ -60,7 +61,7 @@ void Main::_on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction)
                     ,
                     Thrower->get_global_position().y
     ));
-    
+    Godot::print("A Shuriken was made at: " + s->get_global_position());
 
     s->set_axis_velocity(
             Vector2(Is_Facing_Right? 1000 : -1000

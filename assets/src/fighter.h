@@ -47,6 +47,7 @@ class Fighter: public Area2D
 
                 void _on_Fighter_body_entered(godot::PhysicsBody2D *body);
                 void _on_Fighter_body_exited(godot::PhysicsBody2D *body);
+                void _on_AnimatedSprite_animation_finished();
 
 
         public:

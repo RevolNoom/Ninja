@@ -5,15 +5,11 @@
 
 void Fighter::_process(double delta)
 {
-    if (_Anim_Sprite == nullptr)
-    {
-        Godot::print_error("Hey, _Anim_Sprite is null", "_process",  "fighter.cpp", 53);
-        return;
-    }
 
     _Velocity.x = 0;
     if (KEYPRESS.is_key_pressed(_Key_Right))
         _Velocity.x += _Speed;
+
     if (KEYPRESS.is_key_pressed(_Key_Left))
         _Velocity.x -= _Speed;
     
@@ -31,7 +27,8 @@ void Fighter::_process(double delta)
         Vector2 Direction= Vector2(-1, 0);
         if (_Anim_Sprite->is_flipped_h())
             Direction.x = 1; 
-            
+        
+        Godot::print("I threw a shuriken!");
         emit_signal("Shuriken_Throw", this, Direction);
         _Current_Cooldown = _Shuriken_Cooldown;
     }  
@@ -39,21 +36,17 @@ void Fighter::_process(double delta)
     _Current_Cooldown -= delta;
     _Current_Cooldown = _Current_Cooldown < 0? 0 : _Current_Cooldown;
 
-    
-    if (!_Anim_Sprite->is_playing())
+    if (_Anim_Sprite->get_animation()!= "throw_left")
     {
-        //Godot::print("Idling");
-        _Anim_Sprite->set_animation("left");
-    }
-    if (_Velocity.x != 0)
-    {
-        _Anim_Sprite->set_flip_h(_Velocity.x > 0);
-        _Anim_Sprite->play();
-    }
-    else
-    {
-        //_Anim_Sprite->set_animation("default");
-        //_Anim_Sprite->stop();
+        if (_Velocity.x != 0)
+        {
+            _Anim_Sprite->set_flip_h(_Velocity.x > 0);
+            _Anim_Sprite->play();
+        }
+        else
+        {
+            _Anim_Sprite->stop();
+        }
     }
 
     _Last_Position = get_global_position();
@@ -62,6 +55,11 @@ void Fighter::_process(double delta)
     set_global_position(new_position);
 }
 
+
+void Fighter::_on_AnimatedSprite_animation_finished()
+{
+    _Anim_Sprite->play("left");
+}
 
 void Fighter::_ready()
 {
@@ -95,14 +93,15 @@ void Fighter::_ready()
                                      + Race_lowered + "_anim.tres" ));
     if (_Anim_Sprite==nullptr)
     {
-        Godot::print_error("_Anim_Sprite nullptr", "_ready", "fighter.cpp", 68);
+        Godot::print_error("_Anim_Sprite nullptr", "_ready", "fighter.cpp", 95);
         return;
     }
-    _Anim_Sprite->set_animation("default");
+    _Anim_Sprite->set_animation("left");
     _Anim_Sprite->show();
     _Anim_Sprite->set_global_scale(Vector2(1.5, 1.5));
 
     // Setting Signals
+    connect("Shuriken_Throw", get_parent(), "_on_Fighter_Shuriken_Throw");
     connect("body_entered", this, "_on_Fighter_body_entered");
     connect("body_exited", this, "_on_Fighter_body_exited");
 
@@ -187,8 +186,6 @@ void Fighter::_on_Fighter_body_entered(godot::PhysicsBody2D *body)
     }
     else 
            Godot::print("_on_Fighter_body_entered: Unknown body collided");
-
-    
 }
 
 
@@ -201,10 +198,11 @@ void Fighter::_on_Fighter_body_exited(godot::PhysicsBody2D *body)
 
 void Fighter::_register_methods()
 {
-    register_method("_process", &Fighter::_process);
     register_method("_ready", &Fighter::_ready);
-    register_method("_on_Fighter_body_entered", &Fighter::_on_Fighter_body_entered);
+    register_method("_process", &Fighter::_process);
     register_method("_on_Fighter_body_exited", &Fighter::_on_Fighter_body_exited);
+    register_method("_on_Fighter_body_entered", &Fighter::_on_Fighter_body_entered);
+    register_method("_on_AnimatedSprite_animation_finished", &Fighter::_on_AnimatedSprite_animation_finished);
 
     register_property("Race", &Fighter::_Race, String("Human"));
     register_property("Key_Right", &Fighter::_Key_Right, GlobalConstants::KEY_D);

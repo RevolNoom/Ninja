@@ -10,7 +10,7 @@ script = ExtResource( 2 )
 [node name="Map" parent="." instance=ExtResource( 5 )]
 
 [node name="StartPositionGoblin" type="Position2D" parent="."]
-position = Vector2( 1019.79, 788.498 )
+position = Vector2( 1044.74, 400.066 )
 
 [node name="StartPositionHuman" type="Position2D" parent="."]
 position = Vector2( 475.041, 354.466 )
@@ -20,5 +20,3 @@ scale = Vector2( 1.5, 1.5 )
 Race = "Goblin"
 
 [node name="Human" parent="." instance=ExtResource( 1 )]
-[connection signal="Shuriken_Throw" from="Goblin" to="." method="_on_Fighter_Shuriken_Throw"]
-[connection signal="Shuriken_Throw" from="Human" to="." method="_on_Fighter_Shuriken_Throw"]

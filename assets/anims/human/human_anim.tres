@@ -24,7 +24,7 @@ animations = [ {
 "speed": 1.0
 }, {
 "frames": [ ExtResource( 6 ), ExtResource( 3 ), ExtResource( 2 ), ExtResource( 3 ), ExtResource( 6 ) ],
-"loop": true,
+"loop": false,
 "name": "throw_left",
 "speed": 20.0
 } ]
