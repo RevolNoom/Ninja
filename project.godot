@@ -24,6 +24,10 @@ config/icon="res://icon.png"
 window/size/width=1500
 window/size/height=1000
 
+[physics]
+
+2d/default_linear_damp=0.01
+
 [rendering]
 
 environment/default_environment="res://default_env.tres"

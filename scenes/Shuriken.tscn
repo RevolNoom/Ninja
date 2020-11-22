@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://assets/anims/human/shuriken.png" type="Texture" id=1]
 [ext_resource path="res://scenes/Shuriken.gdns" type="Script" id=2]
@@ -6,20 +6,29 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 9.2314
 
-[sub_resource type="SpriteFrames" id=2]
-animations = [ {
-"frames": [ ExtResource( 1 ) ],
-"loop": true,
-"name": "default",
-"speed": 0.0
-} ]
-
 [node name="Shuriken" type="RigidBody2D"]
-gravity_scale = 0.0
+gravity_scale = 2.0
+contacts_reported = 1
+contact_monitor = true
 script = ExtResource( 2 )
+Damage = 4000.0
+Angular_Velocity = 10.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = SubResource( 2 )
+[node name="TextureRect" type="TextureRect" parent="."]
+margin_left = -8.91904
+margin_top = -8.02714
+margin_right = 9.08096
+margin_bottom = 9.97286
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
+[connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

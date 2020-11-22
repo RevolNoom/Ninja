@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include <Godot.hpp>
+#include <SceneTree.hpp>
 #include <ResourceLoader.hpp>
 #include <CollisionObject2D.hpp>
 #include <Position2D.hpp>
@@ -25,11 +26,12 @@ class Main: public Node
         ~Main();
         
         void Start_Game();
+        void _on_Button_pressed();
         void _on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction);
-
+        void _on_Fighter_die(Fighter *fighter);
     private:
         Ref<PackedScene> _Shuriken_Scene;
-
+        
 };
 
 #endif

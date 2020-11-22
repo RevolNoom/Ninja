@@ -5,36 +5,50 @@
 
 void Fighter::_process(double delta)
 {
-
-    _Velocity.x = 0;
+    
     if (KEYPRESS.is_key_pressed(_Key_Right))
-        _Velocity.x += _Speed;
+        _Velocity.x = _Speed;
 
     if (KEYPRESS.is_key_pressed(_Key_Left))
-        _Velocity.x -= _Speed;
-    
-    if (KEYPRESS.is_key_pressed(_Key_Jump) && 
-        _Current_Gravity == 0) //See if we're standing on a platform
-        _Velocity.y = - _Speed * _Jump_Power;
+        _Velocity.x = -_Speed;
 
-    _Velocity.y += _Current_Gravity*delta;
-
-    if (_Current_Cooldown <= 0 && KEYPRESS.is_key_pressed(_Key_Throw))
+    if (KEYPRESS.is_key_pressed(_Key_Jump) && is_on_floor())
     {
-        //_Anim_Sprite->set_animation();
+        _Velocity.y = - _Speed * _Jump_Power;
+    }
+
+
+    if (_Throw_Current_Cooldown <= 0 
+        && KEYPRESS.is_key_pressed(_Key_Throw)
+        && _Shuriken_Left > 0)
+    {
+        --_Shuriken_Left;
+
+        get_node<Label>("Control/HBoxContainer/Shuriken_Left")->set_text(String::num_int64(_Shuriken_Left));
+
         _Anim_Sprite->play("throw_left");
 
         Vector2 Direction= Vector2(-1, 0);
         if (_Anim_Sprite->is_flipped_h())
             Direction.x = 1; 
         
-        Godot::print("I threw a shuriken!");
         emit_signal("Shuriken_Throw", this, Direction);
-        _Current_Cooldown = _Shuriken_Cooldown;
+        _Throw_Current_Cooldown = _Throw_Cooldown;
     }  
 
-    _Current_Cooldown -= delta;
-    _Current_Cooldown = _Current_Cooldown < 0? 0 : _Current_Cooldown;
+    _Throw_Current_Cooldown -= delta;
+    _Throw_Current_Cooldown = _Throw_Current_Cooldown < 0? 0 : _Throw_Current_Cooldown;
+
+    if (_Shuriken_Left<_Total_Shuriken)
+    {
+        _New_Shuriken_Current_Cooldown -= delta;
+        if (_New_Shuriken_Current_Cooldown < 0)
+        {
+            ++_Shuriken_Left;
+            _New_Shuriken_Current_Cooldown = _New_Shuriken_Cooldown;
+            get_node<Label>("Control/HBoxContainer/Shuriken_Left")->set_text(String::num_int64(_Shuriken_Left));
+        }
+    }
 
     if (_Anim_Sprite->get_animation()!= "throw_left")
     {
@@ -48,11 +62,15 @@ void Fighter::_process(double delta)
             _Anim_Sprite->stop();
         }
     }
+}
 
-    _Last_Position = get_global_position();
-    auto new_position = get_global_position() + _Velocity*delta;
+void Fighter::_physics_process(double delta)
+{
+    _Velocity = move_and_slide(_Velocity, Vector2(0, -1));
 
-    set_global_position(new_position);
+    _Velocity.y += DEFAULT_GRAVITY * delta;
+
+    _Velocity.x = std::abs(_Velocity.x) < _Speed/3 ? 0 : _Velocity.x * 0.95;
 }
 
 
@@ -65,7 +83,8 @@ void Fighter::_ready()
 {
     // Initializing things that can't be called in init()
     // without breaking the game
-
+    //connect()
+    
     _Anim_Sprite=get_node<AnimatedSprite>("AnimatedSprite");
 
     auto Race_lowered = _Race.to_lower();
@@ -73,24 +92,25 @@ void Fighter::_ready()
     if (Race_lowered == "human")
         setup_race();
     else if (Race_lowered == "goblin")
-        setup_race(0.8, 
-                    1.22, 
-                    2,
+        setup_race(0.9, 
+                    1.1, 
+                    DEFAULT_JUMP_POWER,
                     GlobalConstants::KEY_UP, 
                     GlobalConstants::KEY_LEFT,
                     GlobalConstants::KEY_RIGHT,
                     GlobalConstants::KEY_DOWN);
     
-
     Ref<RectangleShape2D> Rect = get_node<CollisionShape2D>("CollisionShape2D")->get_shape();
     _Character_Size = Rect->get_extents();
     _Screen_Size = get_viewport_rect().get_size();
-    
     
     // Setting Animations
     _Anim_Sprite->set_sprite_frames(ResourceLoader::get_singleton()
                         ->load("res://assets/anims/" + Race_lowered + "/"
                                      + Race_lowered + "_anim.tres" ));
+    get_node<Label>("Control/HBoxContainer/Shuriken_Left")->set_text(String::num_int64(_Shuriken_Left));
+    //Godot::print("Character size: " + _Race + _Character_Size);
+
     if (_Anim_Sprite==nullptr)
     {
         Godot::print_error("_Anim_Sprite nullptr", "_ready", "fighter.cpp", 95);
@@ -101,10 +121,8 @@ void Fighter::_ready()
     _Anim_Sprite->set_global_scale(Vector2(1.5, 1.5));
 
     // Setting Signals
-    connect("Shuriken_Throw", get_parent(), "_on_Fighter_Shuriken_Throw");
-    connect("body_entered", this, "_on_Fighter_body_entered");
-    connect("body_exited", this, "_on_Fighter_body_exited");
-
+    connect("Shuriken_Throw", get_tree()->get_current_scene(), "_on_Fighter_Shuriken_Throw");
+    connect("die", get_tree()->get_current_scene(), "_on_Fighter_die");
 }
 
 void Fighter::_init()
@@ -120,7 +138,8 @@ void Fighter::setup_race(double HpMultiplier,
                         int KeyRight,
                         int KeyThrow,
                         int TotalShuriken,
-                        double ShurikenCooldown,
+                        double ThrowCooldown,
+                        double NewShurikenCooldown,
                         double HitPoint,
                         double Speed)
 {
@@ -130,78 +149,42 @@ void Fighter::setup_race(double HpMultiplier,
     _Key_Throw = KeyThrow;
     _Key_Right = KeyRight;
     _Total_Shuriken = TotalShuriken;
-    _Shuriken_Cooldown = ShurikenCooldown;
+    _Shuriken_Left=_Total_Shuriken;
+
+    _Throw_Cooldown = ThrowCooldown;
+    _Throw_Current_Cooldown = 0;
+    _New_Shuriken_Cooldown = NewShurikenCooldown;
+    _New_Shuriken_Current_Cooldown = _New_Shuriken_Cooldown;
     _Hit_Point=HitPoint*HpMultiplier;
     _Speed=Speed*SpdMultiplier;
-
-    _Velocity = Vector2();
-    _Gravity = DEFAULT_GRAVITY;
-    _Current_Cooldown = 0;
-    _Current_Gravity = _Gravity;
-
-    
 }
 
-void Fighter::_on_Fighter_body_entered(godot::PhysicsBody2D *body)
+
+void Fighter::Reset_For_New_Game()
 {
-    //Godot::print(String("Hey, a ") + body->___get_class_name() + String(" hit me! :("));
-    
-    //One way collision on the upper side of the platform
-    if (body->is_class("StaticBody2D"))
-    {
-        //Godot::print(String("Luckily, it's only a StaticBody2D"));
-
-        auto ColliShape = body->get_node<CollisionShape2D>("CollisionShape2D");
-        auto rect = ColliShape->get_shape();
-        Vector2 rectpos= cast_to<RectangleShape2D>(rect.ptr())->get_extents();
-    
-        if (ColliShape->get_global_position().y  >= _Last_Position.y)
-        {
-            //Put the fighter on the platform, instead of
-            //hanging in the mid-air
-            set_global_position(Vector2(get_position().x, ColliShape->get_global_position().y - _Character_Size.y));
-            
-            _Velocity.y = 0;
-            _Current_Gravity = 0;
-        }
-    }
-    
-    //Note to self:
-    // For precise type checking, use cast_to
-    //else if (body->is_class("Shuriken"))
-    
-    else if (cast_to<Shuriken>(body)!=nullptr)
-    {
-        //Godot::print("Finally a shuriken");
-
-        _Hit_Point -= (double) body->get("Damage");
-        if (_Hit_Point<=0)
-        {
-            set_deferred("disabled", true);
-            queue_free();
-        }
-        
-        body->set_deferred("disabled", true);
-        body->queue_free();
-    }
-    else 
-           Godot::print("_on_Fighter_body_entered: Unknown body collided");
+    _Hit_Point = DEFAULT_HIT_POINT * DEFAULT_HP_MULTIPLIER;
+    _Shuriken_Left=_Total_Shuriken;
+    _Throw_Cooldown = DEFAULT_THROW_COOLDOWN;
+    _Throw_Current_Cooldown = 0;
+    _New_Shuriken_Cooldown = DEFAULT_NEW_SHURIKEN_COOLDOWN;
+    _New_Shuriken_Current_Cooldown = _New_Shuriken_Cooldown;
 }
 
 
-void Fighter::_on_Fighter_body_exited(godot::PhysicsBody2D *body)
+void Fighter::Take_Damage(double damage)
 {
-    if (body->is_class("StaticBody2D"))
-        _Current_Gravity = _Gravity;
+    _Hit_Point -= damage;
+    if (_Hit_Point <= 0)
+    {
+        emit_signal("die", this);
+    }
 }
-
 
 void Fighter::_register_methods()
 {
     register_method("_ready", &Fighter::_ready);
     register_method("_process", &Fighter::_process);
-    register_method("_on_Fighter_body_exited", &Fighter::_on_Fighter_body_exited);
-    register_method("_on_Fighter_body_entered", &Fighter::_on_Fighter_body_entered);
+    register_method("_physics_process", &Fighter::_physics_process);
     register_method("_on_AnimatedSprite_animation_finished", &Fighter::_on_AnimatedSprite_animation_finished);
 
     register_property("Race", &Fighter::_Race, String("Human"));
@@ -210,15 +193,17 @@ void Fighter::_register_methods()
     register_property("Key_Jump", &Fighter::_Key_Jump, GlobalConstants::KEY_W);
     register_property("Key_Throw", &Fighter::_Key_Throw, GlobalConstants::KEY_S);
     register_property("Total_Shuriken", &Fighter::_Total_Shuriken, 3);
-    register_property("Shuriken_Cooldown", &Fighter::_Shuriken_Cooldown, 1.0);
-    register_property("Hit_Point", &Fighter::_Hit_Point, 10000.0);
-    register_property("Speed", &Fighter::_Speed, 400.0);
-    register_property("Gravity", &Fighter::_Gravity, DEFAULT_GRAVITY);
+    register_property("New_Shuriken_Cooldown", &Fighter::_New_Shuriken_Cooldown, DEFAULT_NEW_SHURIKEN_COOLDOWN);
+    register_property("Throw_Cooldown", &Fighter::_Throw_Cooldown, DEFAULT_THROW_COOLDOWN);
+    register_property("Hit_Point", &Fighter::_Hit_Point, DEFAULT_HIT_POINT);
+    register_property("Speed", &Fighter::_Speed, DEFAULT_SPEED);
     
     register_signal<Fighter>("Shuriken_Throw", "Thrower", GODOT_VARIANT_TYPE_OBJECT,     
                                                 "Direction", GODOT_VARIANT_TYPE_VECTOR2);
+
+    register_signal<Fighter>("die", "Fighter", GODOT_VARIANT_TYPE_OBJECT);
+                                
     
-    //register_property()
 }
 
 Fighter::Fighter()

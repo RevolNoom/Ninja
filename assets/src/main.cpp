@@ -2,35 +2,65 @@
 
 void Main::_init()
 {
-    _Shuriken_Scene = ResourceLoader::get_singleton()->load("res://scenes/Shuriken.tscn");  
 }
 
 void Main::_register_methods()
 {
     register_method("_ready", &Main::_ready);
     register_method("_on_Fighter_Shuriken_Throw", &Main::_on_Fighter_Shuriken_Throw);
-    
+    register_method("_on_Fighter_die", &Main::_on_Fighter_die);
+    register_method("_on_Button_pressed", &Main::_on_Button_pressed);
+
     register_property("_Shuriken_Scene", &Main::_Shuriken_Scene, 
                         Ref<PackedScene>(PackedScene::_new()));
+
 }
 
 void Main::_ready()
+{ 
+    _Shuriken_Scene = ResourceLoader::get_singleton()->load("res://scenes/Shuriken.tscn"); 
+    
+    auto Goblin = get_node<Fighter>("Players/Goblin");
+    auto Human = get_node<Fighter>("Players/Human");
+
+    Goblin->hide();
+    Human->hide();
+}
+
+void Main::Start_Game()
+{
+    get_node<Control>("StartScreen")->hide();
+
+    get_node<Control>("EndScreen")->hide();
+    
+    auto Goblin = get_node<Fighter>("Players/Goblin");
+    auto Human = get_node<Fighter>("Players/Human");
+    
+    //Goblin->set_global_position(                get_node<Position2D>("StartPositionGoblin")->get_global_position());
+    Goblin->Reset_For_New_Game();
+    Goblin->show();
+
+
+    //Human->set_global_position(                get_node<Position2D>("StartPositionHuman")->get_global_position());
+    Human->Reset_For_New_Game();
+    Human->show();
+}
+
+void Main::_on_Button_pressed()
 {
     Start_Game();
 }
 
-
-void Main::Start_Game()
+void Main::_on_Fighter_die(Fighter *fighter)
 {
-    get_node<Area2D>("Goblin")->set_position(
-                            get_node<Position2D>("StartPositionGoblin")->get_position());
-
-    get_node<Area2D>("Human")->set_position(
-                            get_node<Position2D>("StartPositionHuman")->get_position());
+    fighter->hide();
+    get_node<Control>("EndScreen")->show(); 
 }
 
 void Main::_on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction)
 {
+    if (!(Thrower->is_visible()))
+        return;
     if (!(_Shuriken_Scene->can_instance()))
     {
         Godot::print("Can't instance Shuriken");
@@ -47,12 +77,10 @@ void Main::_on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction)
 
     add_child(s);
 
-
     s->show();
     
     auto Is_Facing_Right = Thrower->get_node<AnimatedSprite>("AnimatedSprite")->is_flipped_h();
 
-    //Godot::print("Character size: " + Thrower->_Character_Size);
     s->set_global_position(
             Vector2(
                     Thrower->get_global_position().x + 
@@ -61,11 +89,10 @@ void Main::_on_Fighter_Shuriken_Throw(Fighter *Thrower, Vector2 Direction)
                     ,
                     Thrower->get_global_position().y
     ));
-    Godot::print("A Shuriken was made at: " + s->get_global_position());
 
-    s->set_axis_velocity(
-            Vector2(Is_Facing_Right? 1000 : -1000
-                    , 0));
+
+    s->set_axis_velocity(Vector2( 2000 * (Is_Facing_Right? 1 : -1)
+                                                                , 0));
 }
 
 Main::Main()

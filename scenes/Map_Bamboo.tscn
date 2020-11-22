@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [sub_resource type="StreamTexture" id=1]
 flags = 4
@@ -24,6 +24,12 @@ extents = Vector2( 59.4341, 5.49841 )
 
 [sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 30.6078, 7.01898 )
+
+[sub_resource type="RectangleShape2D" id=9]
+extents = Vector2( 711.43, 19.7922 )
+
+[sub_resource type="RectangleShape2D" id=10]
+extents = Vector2( 39.1279, 600.864 )
 
 [node name="Map" type="TextureRect"]
 margin_right = 1500.0
@@ -99,13 +105,15 @@ one_way_collision_margin = 0.0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat1"]
 position = Vector2( 159.807, 70.7106 )
 shape = SubResource( 3 )
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree2"]
-position = Vector2( 155.316, 269.623 )
+position = Vector2( -80.684, 285.623 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat2"]
-position = Vector2( -0.55481, 2.9743 )
+position = Vector2( 237.445, -17.0257 )
 shape = SubResource( 3 )
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree2"]
 position = Vector2( -10.0908, 393.54 )
@@ -113,6 +121,7 @@ position = Vector2( -10.0908, 393.54 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat3"]
 position = Vector2( 159.807, 70.7106 )
 shape = SubResource( 3 )
+one_way_collision_margin = 0.0
 
 [node name="Plat4" type="StaticBody2D" parent="Tree2"]
 position = Vector2( -16.8179, 581.9 )
@@ -120,6 +129,7 @@ position = Vector2( -16.8179, 581.9 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat4"]
 position = Vector2( 160.002, 71.7147 )
 shape = SubResource( 3 )
+one_way_collision_margin = 0.0
 
 [node name="Plat5" type="StaticBody2D" parent="Tree2"]
 position = Vector2( -23.5451, 758.489 )
@@ -127,6 +137,7 @@ position = Vector2( -23.5451, 758.489 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat5"]
 position = Vector2( 159.807, 70.7106 )
 shape = SubResource( 3 )
+one_way_collision_margin = 0.0
 
 [node name="Plat6" type="StaticBody2D" parent="Tree2"]
 position = Vector2( -28.5905, 921.622 )
@@ -134,6 +145,8 @@ position = Vector2( -28.5905, 921.622 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree2/Plat6"]
 position = Vector2( 159.807, 70.7106 )
 shape = SubResource( 3 )
+one_way_collision = true
+one_way_collision_margin = 0.0
 
 [node name="Tree3" type="Node2D" parent="."]
 
@@ -142,6 +155,7 @@ shape = SubResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat1"]
 position = Vector2( 230.43, 145.351 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree3"]
 position = Vector2( -1.68176, 171.543 )
@@ -149,6 +163,7 @@ position = Vector2( -1.68176, 171.543 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat2"]
 position = Vector2( 231.137, 148.575 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree3"]
 position = Vector2( -1.68176, 334.677 )
@@ -156,6 +171,7 @@ position = Vector2( -1.68176, 334.677 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat3"]
 position = Vector2( 230.43, 145.351 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Plat4" type="StaticBody2D" parent="Tree3"]
 position = Vector2( -3.36359, 491.083 )
@@ -163,6 +179,7 @@ position = Vector2( -3.36359, 491.083 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat4"]
 position = Vector2( 230.43, 145.351 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Plat5" type="StaticBody2D" parent="Tree3"]
 position = Vector2( -8.40894, 642.445 )
@@ -170,6 +187,7 @@ position = Vector2( -8.40894, 642.445 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat5"]
 position = Vector2( 233.605, 146.938 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Plat6" type="StaticBody2D" parent="Tree3"]
 position = Vector2( -10.0907, 788.761 )
@@ -177,41 +195,43 @@ position = Vector2( -10.0907, 788.761 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree3/Plat6"]
 position = Vector2( 228.843, 150.113 )
 shape = SubResource( 4 )
+one_way_collision_margin = 0.0
 
 [node name="Tree4" type="Node2D" parent="."]
 
 [node name="Plat1" type="StaticBody2D" parent="Tree4"]
-position = Vector2( 477.818, 213.959 )
+position = Vector2( -98.182, 213.959 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree4/Plat1"]
-position = Vector2( -3.17841, 0 )
+position = Vector2( 574.822, 2 )
 shape = SubResource( 5 )
-one_way_collision_margin = 30.0
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree4"]
-position = Vector2( 482.863, 501.546 )
+position = Vector2( -93.137, 501.546 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree4/Plat2"]
-position = Vector2( -3.17841, 0 )
+position = Vector2( 574.822, 2 )
 shape = SubResource( 5 )
-one_way_collision_margin = 30.0
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree4"]
-position = Vector2( 487.909, 785.769 )
+position = Vector2( -88.091, 785.769 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree4/Plat3"]
-position = Vector2( -3.17841, 0 )
+position = Vector2( 574.822, 2 )
 shape = SubResource( 5 )
-one_way_collision_margin = 30.0
+one_way_collision_margin = 0.0
 
 [node name="Tree56" type="Node2D" parent="."]
 
 [node name="Plat1" type="StaticBody2D" parent="Tree56"]
-position = Vector2( 130.108, 992.778 )
+position = Vector2( -117.892, 994.778 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat1"]
-position = Vector2( 565.686, -824.487 )
+position = Vector2( 811.686, -828.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 136.835, 1162.64 )
@@ -219,6 +239,7 @@ position = Vector2( 136.835, 1162.64 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat2"]
 position = Vector2( 564.004, -826.169 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 131.79, 1325.77 )
@@ -226,6 +247,7 @@ position = Vector2( 131.79, 1325.77 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat3"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat4" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 133.472, 1487.23 )
@@ -233,6 +255,7 @@ position = Vector2( 133.472, 1487.23 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat4"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat5" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 133.472, 1640.27 )
@@ -240,6 +263,7 @@ position = Vector2( 133.472, 1640.27 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat5"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat6" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 130.108, 1781.54 )
@@ -247,20 +271,23 @@ position = Vector2( 130.108, 1781.54 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat6"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat7" type="StaticBody2D" parent="Tree56"]
-position = Vector2( 237.743, 922.143 )
+position = Vector2( -68.257, 912.143 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat7"]
-position = Vector2( 565.686, -824.487 )
+position = Vector2( 871.686, -814.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat8" type="StaticBody2D" parent="Tree56"]
-position = Vector2( 234.379, 1075.19 )
+position = Vector2( -193.621, 141.19 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat8"]
-position = Vector2( 565.686, -824.487 )
+position = Vector2( 993.686, 113.513 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat9" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 234.379, 1223.18 )
@@ -268,6 +295,7 @@ position = Vector2( 234.379, 1223.18 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat9"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat10" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 237.743, 1366.14 )
@@ -275,6 +303,7 @@ position = Vector2( 237.743, 1366.14 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat10"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat11" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 234.379, 1504.04 )
@@ -282,6 +311,7 @@ position = Vector2( 234.379, 1504.04 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat11"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat12" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 231.016, 1626.81 )
@@ -289,6 +319,7 @@ position = Vector2( 231.016, 1626.81 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat12"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Plat13" type="StaticBody2D" parent="Tree56"]
 position = Vector2( 232.697, 1749.58 )
@@ -296,15 +327,17 @@ position = Vector2( 232.697, 1749.58 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree56/Plat13"]
 position = Vector2( 565.686, -824.487 )
 shape = SubResource( 6 )
+one_way_collision_margin = 0.0
 
 [node name="Tree78" type="Node2D" parent="."]
 
 [node name="Plat1" type="StaticBody2D" parent="Tree78"]
-position = Vector2( 130.108, 992.778 )
+position = Vector2( -77.892, 982.778 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree78/Plat1"]
-position = Vector2( 917.825, -885.298 )
+position = Vector2( 1123.82, -875.298 )
 shape = SubResource( 7 )
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree78"]
 position = Vector2( 114.972, 1386.32 )
@@ -312,6 +345,7 @@ position = Vector2( 114.972, 1386.32 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree78/Plat2"]
 position = Vector2( 917.825, -885.298 )
 shape = SubResource( 7 )
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree78"]
 position = Vector2( 98.1539, 1761.36 )
@@ -319,6 +353,7 @@ position = Vector2( 98.1539, 1761.36 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree78/Plat3"]
 position = Vector2( 917.825, -885.298 )
 shape = SubResource( 7 )
+one_way_collision_margin = 0.0
 
 [node name="Plat4" type="StaticBody2D" parent="Tree78"]
 position = Vector2( 412.649, 1245.05 )
@@ -326,6 +361,7 @@ position = Vector2( 412.649, 1245.05 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree78/Plat4"]
 position = Vector2( 917.825, -885.298 )
 shape = SubResource( 7 )
+one_way_collision_margin = 0.0
 
 [node name="Plat5" type="StaticBody2D" parent="Tree78"]
 position = Vector2( 400.877, 1588.13 )
@@ -333,15 +369,17 @@ position = Vector2( 400.877, 1588.13 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree78/Plat5"]
 position = Vector2( 917.825, -885.298 )
 shape = SubResource( 7 )
+one_way_collision_margin = 0.0
 
 [node name="Tree9X" type="Node2D" parent="."]
 
 [node name="Plat1" type="StaticBody2D" parent="Tree9X"]
-position = Vector2( 130.108, 992.778 )
+position = Vector2( -105.892, 992.778 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree9X/Plat1"]
-position = Vector2( 1294.01, -810.344 )
+position = Vector2( 1530.01, -806.344 )
 shape = SubResource( 8 )
+one_way_collision_margin = 0.0
 
 [node name="Plat2" type="StaticBody2D" parent="Tree9X"]
 position = Vector2( 136.835, 1226.55 )
@@ -349,6 +387,7 @@ position = Vector2( 136.835, 1226.55 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree9X/Plat2"]
 position = Vector2( 1294.01, -810.344 )
 shape = SubResource( 8 )
+one_way_collision_margin = 0.0
 
 [node name="Plat3" type="StaticBody2D" parent="Tree9X"]
 position = Vector2( 140.199, 1463.68 )
@@ -356,6 +395,7 @@ position = Vector2( 140.199, 1463.68 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree9X/Plat3"]
 position = Vector2( 1294.01, -810.344 )
 shape = SubResource( 8 )
+one_way_collision_margin = 0.0
 
 [node name="Plat4" type="StaticBody2D" parent="Tree9X"]
 position = Vector2( 150.29, 1692.4 )
@@ -363,6 +403,7 @@ position = Vector2( 150.29, 1692.4 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree9X/Plat4"]
 position = Vector2( 1294.01, -801.935 )
 shape = SubResource( 8 )
+one_way_collision_margin = 0.0
 
 [node name="Plat5" type="StaticBody2D" parent="Tree9X"]
 position = Vector2( 200.743, 1662.13 )
@@ -370,3 +411,25 @@ position = Vector2( 200.743, 1662.13 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Tree9X/Plat5"]
 position = Vector2( 1294.01, -810.344 )
 shape = SubResource( 8 )
+one_way_collision_margin = 0.0
+
+[node name="Borders" type="StaticBody2D" parent="."]
+position = Vector2( 777.741, 1017.96 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Borders"]
+position = Vector2( -27.6651, 11.1457 )
+shape = SubResource( 9 )
+one_way_collision_margin = 2.0
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="Borders"]
+position = Vector2( -21.1779, -1129.44 )
+shape = SubResource( 9 )
+one_way_collision_margin = 2.0
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Borders"]
+position = Vector2( -815.955, -573.439 )
+shape = SubResource( 10 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="Borders"]
+position = Vector2( 758.139, -560.09 )
+shape = SubResource( 10 )
